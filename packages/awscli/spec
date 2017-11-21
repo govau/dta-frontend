@@ -1,0 +1,8 @@
+---
+name: awscli
+
+dependencies:
+  - python-2.7
+
+files:
+  - awscli/awscli-bundle.zip  # https://s3.amazonaws.com/aws-cli/awscli-bundle.zip

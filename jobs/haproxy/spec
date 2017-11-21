@@ -1,0 +1,34 @@
+---
+name: haproxy
+
+templates:
+  pre-start.erb: bin/pre-start
+  haproxy_ctl.erb: bin/haproxy_ctl
+  fetch_config.erb: bin/fetch_config
+  bootstrap_haproxy.cfg.erb: config/haproxy.d/__bootstrap.cfg
+  update: bin/update
+
+packages:
+  - haproxy
+  - awscli
+  - python-2.7
+
+properties:
+  proxy.http_bind_host:
+    description: Host/IP for proxy to listen on for unencrypted traffic
+    example: 127.0.0.1
+    default: "*"
+  proxy.http_bind_port:
+    description: Port for proxy to listen on for unencrypted traffic
+    example: 8080
+    default: 80
+  acme_address:
+    description: Address of server receiving ACME challenges
+    example: acme.example.com
+  config_bucket:
+    description: Name of S3 bucket that contains proxy configuration
+  default_config_object:
+    description: Key of object to load by default for configuration at startup
+  env:
+    description: Dictionary of environment variables to make available in HAProxy config
+    default: {}

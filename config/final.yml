@@ -1,0 +1,7 @@
+---
+name: dta-frontend
+blobstore:
+  provider: s3
+  options:
+    region: ap-southeast-2
+    bucket_name: dta-frontend-boshrelease

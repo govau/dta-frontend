@@ -1,0 +1,20 @@
+set -eux
+
+HAPROXY_VERSION=1.7.9
+PCRE_VERSION=8.41
+
+mkdir ${BOSH_INSTALL_TARGET}/bin
+
+tar xzf haproxy/pcre-${PCRE_VERSION}.tar.gz
+pushd pcre-${PCRE_VERSION}
+  ./configure
+  make
+  make install
+popd
+
+tar xzf haproxy/haproxy-${HAPROXY_VERSION}.tar.gz
+pushd haproxy-${HAPROXY_VERSION}
+  make TARGET=linux2628 USE_OPENSSL=1 USE_STATIC_PCRE=1 USE_ZLIB=1
+  cp haproxy ${BOSH_INSTALL_TARGET}/bin/
+  chmod 755 ${BOSH_INSTALL_TARGET}/bin/haproxy
+popd

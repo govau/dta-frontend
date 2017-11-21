@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eux
+
+: ${PYTHONPATH=}
+source /var/vcap/packages/python-2.7/bosh/compile.env
+
+unzip awscli/awscli-bundle.zip
+mv awscli-bundle/packages deps
+bosh_pip_local deps/awscli-*.tar.gz
+
+bosh_generate_runtime_env

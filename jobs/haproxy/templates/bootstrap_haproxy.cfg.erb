@@ -1,0 +1,21 @@
+# This is a fallback configuration if no configuration is provided
+
+global
+	user vcap
+	group vcap
+	log /dev/log local0
+	tune.ssl.default-dh-param 2048
+	chroot /var/vcap/jobs/haproxy/chroot
+
+frontend http
+	mode http
+	bind "${HAPROXY_HTTP_BIND_HOST}:${HAPROXY_HTTP_BIND_PORT}"
+	acl acme_challenge path_beg -i /.well-known/acme-challenge/
+	http-request redirect location http://"${HAPROXY_ACME_ADDRESS}"%[capture.req.uri] code 302 if acme_challenge
+	http-request redirect scheme https code 301 unless acme_challenge
+	log global
+	option httplog
+	option http-buffer-request
+	timeout client 5s
+	timeout http-request 10s
+	timeout queue 10s

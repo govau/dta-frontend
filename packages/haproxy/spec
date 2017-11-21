@@ -1,0 +1,6 @@
+---
+name: haproxy
+
+files:
+  - haproxy/haproxy-1.7.9.tar.gz  # https://www.haproxy.org/download/1.7/src/haproxy-1.7.9.tar.gz
+  - haproxy/pcre-8.41.tar.gz  # https://ftp.pcre.org/pub/pcre/pcre-8.41.tar.gz
