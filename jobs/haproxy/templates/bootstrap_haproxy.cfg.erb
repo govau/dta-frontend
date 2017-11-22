@@ -1,12 +1,5 @@
 # This is a fallback configuration if no configuration is provided
 
-global
-	user vcap
-	group vcap
-	log /dev/log local0
-	tune.ssl.default-dh-param 2048
-	chroot /var/vcap/jobs/haproxy/chroot
-
 frontend http
 	mode http
 	bind "${HAPROXY_HTTP_BIND_HOST}:${HAPROXY_HTTP_BIND_PORT}"

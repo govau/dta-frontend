@@ -24,32 +24,59 @@ export HAPROXY_ACME_ADDRESS='<%= p("acme_address") %>'
 export <%= key %>='<%= value %>'
 <% end %>
 
+function wait_for_finish {
+  while read PID
+  do
+    # Trick for waiting for an arbitrary process to finish
+    tail -f --pid "${PID}" /dev/null
+  done < "${PID_FILE}"
+}
+
 case $1 in
 
   start)
     mkdir -p "${RUN_DIR}" "${LOG_DIR}"
     chown -R vcap:vcap "${RUN_DIR}" "${LOG_DIR}"
 
-	echo $$ > "${PID_FILE}"
+    echo $$ > "${PID_FILE}"
 
-	exec "${HAPROXY}" -p "${PID_FILE}" -- "${CONFIG_DIR}"/haproxy.d/*.cfg
+    exec "${HAPROXY}" -f "${JOB_DIR}/global_haproxy.cfg" -p "${PID_FILE}" -- "${CONFIG_DIR}"/haproxy.d/*.cfg
     ;;
 
   stop)
-    xargs kill < "${PID_FILE}"
+    xargs kill -SIGUSR1 < "${PID_FILE}"
+    wait_for_finish
     rm -f "${PID_FILE}"
     ;;
 
+  hard-stop)
+    # Normally this will be run by monit after BOSH has run the drain script, so we can't assume haproxy is running.
+    if [[ -f "${PID_FILE}" ]]
+    then
+      # haproxy interprets SIGUSR1 as a "graceful stop" signal
+      xargs kill -SIGUSR1 < "${PID_FILE}"
+      sleep 3
+      xargs kill < "${PID_FILE}" || true
+      wait_for_finish
+      rm -f "${PID_FILE}"
+    fi
+    ;;
+
   reload)
-    "${HAPROXY}" -D -p "${PID_FILE}" -sf $(<${PID_FILE}) -- "${CONFIG_DIR}"/haproxy.d/*.cfg
+    "${HAPROXY}" -D -f "${JOB_DIR}/global_haproxy.cfg" -p "${PID_FILE}" -sf $(<"${PID_FILE}") -- "${CONFIG_DIR}"/haproxy.d/*.cfg
     ;;
 
   test)
-    "${HAPROXY}" -c -- "${CONFIG_DIR}"/haproxy.d/*.cfg
-	;;
+    "${HAPROXY}" -c -f "${JOB_DIR}/global_haproxy.cfg" -- "${CONFIG_DIR}"/haproxy.d/*.cfg
+    ;;
+
+  is_running)
+    [[ -f "${PID_FILE}" ]]
+    ps "$(<${PID_FILE})" > /dev/null
+    ;;
 
   *)
-    echo "Usage: haproxy_ctl {start|stop|reload|test}"
+    echo "Usage: haproxy_ctl {start|stop|drain|reload|test|is_running}"
     ;;
 
 esac

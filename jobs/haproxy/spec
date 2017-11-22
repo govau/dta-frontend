@@ -6,7 +6,9 @@ templates:
   haproxy_ctl.erb: bin/haproxy_ctl
   fetch_config.erb: bin/fetch_config
   bootstrap_haproxy.cfg.erb: config/haproxy.d/__bootstrap.cfg
+  global_haproxy.cfg: global_haproxy.cfg
   update: bin/update
+  drain: bin/drain
 
 packages:
   - haproxy
