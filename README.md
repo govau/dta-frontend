@@ -30,11 +30,6 @@ The configuration is expected to be a tarball stored on a remote backend.  (Curr
 
 All files/directories are optional, except for `./haproxy.d`, which should contain [HAProxy configuration files](https://www.haproxy.org/download/1.7/doc/configuration.txt).  `./iptables.conf` (`iptables` configuration in [`iptables-save`](http://www.faqs.org/docs/iptables/iptables-save.html) format) and `./sysctl.d` (same as [`/etc/sysctl.d/`](http://man7.org/linux/man-pages/man5/sysctl.d.5.html)) are paths recognised by the BOSH release, but all other files/directories are just suggestions and can be added as needed.  The HAProxy configs can use the `HAPROXY_FILES_DIR` environment variable to get the path to the directory that contains the configuration files.
 
-There are other environment variables made available (based on the job properties):
-* `HAPROXY_HTTP_BIND_HOST`
-* `HAPROXY_HTTP_BIND_PORT`
-* `HAPROXY_ACME_ADDRESS`
-
 Custom variables can be added through the `env` job property.
 
 A reload of configuration is triggered by running `/var/vcap/jobs/haproxy/bin/update` (see [the source](jobs/haproxy/templates/update) for usage details), which can be run using BOSH's SSH support.  (More sophisticated remote management functionality is expected to be added in future.)
@@ -56,15 +51,23 @@ instance_groups:
   jobs:
   - name: haproxy
     properties:
-      acme_address: acme-client.example.com
-	  # This will load initial configuration from s3://my-config-bucket-name/config.tgz
+      # This will load initial configuration from s3://my-config-bucket-name/config.tgz
       config_bucket: my-config-bucket-name
       default_config_object: config.tgz
-	  # Optionally add some extra variables that can be used in the HAProxy configs
-	  env:
-	    ENVIRONMENT: prod
+      # If a config can't be loaded, this will be used instead.
+      # (Useful for bootstrapping.)
+      fallback_config: |
+        frontend http
+            mode http
+            bind *:80
+            acl acme_challenge path_beg -i /.well-known/acme-challenge/
+            http-request redirect location http://"${ACME_ADDRESS}"%[capture.req.uri] code 302 if acme_challenge
+            http-request redirect scheme https code 301 unless acme_challenge
+      # Optionally add some extra variables that can be used in the HAProxy configs
+      env:
+        ACME_ADDRESS: acme.example.com
     release: dta-frontend
-  vm_extensions: [frontend]  # Should add iam_instance_profile that gives access to above bucket
+  vm_extensions: [frontend]  # Should add iam_instance_profile that gives access to above config bucket
   networks:
   - name: default
   stemcell: default

@@ -7,7 +7,7 @@ templates:
   fetch_config.erb: bin/fetch_config
   reload_config: bin/reload_config
   configure_system: bin/configure_system
-  bootstrap_haproxy.cfg.erb: config/haproxy.d/__bootstrap.cfg
+  fallback_haproxy.cfg.erb: config/haproxy.d/__fallback.cfg
   global_haproxy.cfg: global_haproxy.cfg
   update: bin/update
   drain: bin/drain
@@ -19,17 +19,6 @@ packages:
   - python-2.7
 
 properties:
-  http_bind_host:
-    description: Host/IP for proxy to listen on for unencrypted traffic
-    example: 127.0.0.1
-    default: "*"
-  http_bind_port:
-    description: Port for proxy to listen on for unencrypted traffic
-    example: 8080
-    default: 80
-  acme_address:
-    description: Address of server receiving ACME challenges
-    example: acme.example.com
   config_bucket:
     description: Name of S3 bucket that contains proxy configuration
   default_config_object:
@@ -37,3 +26,6 @@ properties:
   env:
     description: Dictionary of environment variables to make available in HAProxy config
     default: {}
+  fallback_config:
+    description: HAProxy config to be used if no runtime config can be loaded
+    default: ""

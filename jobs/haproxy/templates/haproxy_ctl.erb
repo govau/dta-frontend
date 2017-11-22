@@ -13,12 +13,9 @@ PID_FILE=${RUN_DIR}/pid
 HAPROXY=/var/vcap/packages/haproxy/bin/haproxy
 CONFIG_DIR="${JOB_DIR}/config/"
 
-# These can be used inside the HAProxy configs
+# Environment variables that be referenced inside HAProxy configuration
 export HAPROXY_FILES_DIR="${CONFIG_DIR}"
 export HAPROXY_CERTS_DIR="${CONFIG_DIR}/certs"  # TODO: bad idea.  Get rid of this variable.
-export HAPROXY_HTTP_BIND_HOST='<%= p("http_bind_host") %>'
-export HAPROXY_HTTP_BIND_PORT='<%= p("http_bind_port") %>'
-export HAPROXY_ACME_ADDRESS='<%= p("acme_address") %>'
 
 <% p('env').each do |key, value| %>
 export <%= key %>='<%= value %>'

@@ -33,7 +33,7 @@ mv config "${JOB_DIR}/config"
 if [[ ! -d "${JOB_DIR}/config/haproxy.d" ]];
 then
    mv "${JOB_DIR}/config/configs" "${JOB_DIR}/config/haproxy.d"
-   cp "${JOB_DIR}/__bootstrap.cfg" "${JOB_DIR}/config/haproxy.d"
+   cp "${JOB_DIR}/__fallback.cfg" "${JOB_DIR}/config/haproxy.d"
 fi
 
 if /var/vcap/jobs/haproxy/bin/haproxy_ctl test >> "${LOG_FILE}"
