@@ -19,11 +19,11 @@ packages:
   - python-2.7
 
 properties:
-  proxy.http_bind_host:
+  http_bind_host:
     description: Host/IP for proxy to listen on for unencrypted traffic
     example: 127.0.0.1
     default: "*"
-  proxy.http_bind_port:
+  http_bind_port:
     description: Port for proxy to listen on for unencrypted traffic
     example: 8080
     default: 80
