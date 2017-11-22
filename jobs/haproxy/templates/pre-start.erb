@@ -9,8 +9,13 @@ mkdir -p "${JOB_DIR}/chroot"
 # TODO: Remove this after the migration from acme-proxy-boshrelease
 cp "${JOB_DIR}/config/haproxy.d/__bootstrap.cfg" "${JOB_DIR}"
 
+# 
+sysctl --all >  "${JOB_DIR}/sysctl_defaults.conf"
+
 <% if_p('default_config_object') do |default_config_object| %>
 # Errors are ignored for simpler deployment.
 # Health checking on the load balancer should detect whether the server is ready for traffic.
 "${JOB_DIR}/bin/fetch_config" '<%= default_config_object %>' || echo "$(date) Warning: Failed to load default config '<%= default_config_object %>' (ignoring)" >&2
 <% end %>
+
+"${JOB_DIR}/bin/configure_system"

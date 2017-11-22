@@ -1,0 +1,31 @@
+#!/usr/bin/env python2
+#
+# Usage: merge_sysctl.py sysctl1.conf sysctl2.conf ...
+#
+# Merges multiple sysctl.conf files into one and writes it to stdout.
+#
+# The sysctl command does the simple thing when fed multiple files:
+# it simply sets each value as given, one by one, even if it means overriding
+# previously set values.  This potentially creates a time window in which the
+# value isn't set properly.
+
+import sys
+
+config = {}
+
+for filename in sys.argv[1:]:
+    with open(filename, 'r') as f:
+        for line_number, line in enumerate(f):
+            line = line.lstrip()
+            if line == '' or line.startswith((';', '#')):
+                continue
+            try:
+                variable, value = line.split('=', 1)
+            except ValueError:
+                raise ValueError('Syntax error parsing line "{0}" ({1}:{2})'.format(line, filename, line_number))
+            variable = variable.rstrip()
+            value = value.strip()
+            config[variable] = value
+
+for k, v in config.iteritems():
+    print('{0} = {1}'.format(k, v))

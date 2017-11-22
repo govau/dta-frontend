@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+cd /var/vcap/jobs/haproxy/
+
+./bin/configure_system
+./bin/haproxy_ctl reload

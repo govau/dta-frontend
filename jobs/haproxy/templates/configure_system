@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+shopt -s nullglob
+
+cd /var/vcap/jobs/haproxy/
+
+if [[ -f ./config/iptables.conf ]]
+then
+  iptables-restore < ./config/iptables.conf
+else
+  iptables --flush
+fi
+
+./bin/merge_sysctl sysctl_defaults.conf ./config/sysctl.d/*.conf | sysctl --load - &> /dev/null
