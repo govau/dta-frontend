@@ -14,6 +14,14 @@ This is a HAProxy BOSH release designed as a highly available reverse proxy for 
 
 The configuration is expected to be a tarball stored on a remote backend.  (Currently only AWS S3 supported.)  The tarball should unpack to a directory structure that's something like this:
 
+(Minimal example)
+```
+.
+└── haproxy.d
+    └── config.cfg
+```
+
+(Production example)
 ```
 .
 ├── certs
@@ -28,9 +36,7 @@ The configuration is expected to be a tarball stored on a remote backend.  (Curr
     └── sysctl.conf
 ```
 
-All files/directories are optional, except for `./haproxy.d`, which should contain [HAProxy configuration files](https://www.haproxy.org/download/1.7/doc/configuration.txt).  `./iptables.conf` (`iptables` configuration in [`iptables-save`](http://www.faqs.org/docs/iptables/iptables-save.html) format) and `./sysctl.d` (same as [`/etc/sysctl.d/`](http://man7.org/linux/man-pages/man5/sysctl.d.5.html)) are paths recognised by the BOSH release, but all other files/directories are just suggestions and can be added as needed.  The HAProxy configs can use the `HAPROXY_FILES_DIR` environment variable to get the path to the directory that contains the configuration files.
-
-Custom variables can be added through the `env` job property.
+All files/directories are optional, except for `./haproxy.d`, which should contain [HAProxy configuration files](https://www.haproxy.org/download/1.7/doc/configuration.txt).  `./iptables.conf` (`iptables` configuration in [`iptables-save`](http://www.faqs.org/docs/iptables/iptables-save.html) format) and `./sysctl.d` (same as [`/etc/sysctl.d/`](http://man7.org/linux/man-pages/man5/sysctl.d.5.html)) are paths recognised by the BOSH release, but all other files/directories are just suggestions and can be added as needed.  The HAProxy configs can use the `HAPROXY_FILES_DIR` environment variable to get the path to the directory that contains the configuration files.  Extra custom environment variables can be added through the `env` job property.
 
 A reload of configuration is triggered by running `/var/vcap/jobs/haproxy/bin/update` (see [the source](jobs/haproxy/templates/update) for usage details), which can be run using BOSH's SSH support.  (More sophisticated remote management functionality is expected to be added in future.)
 

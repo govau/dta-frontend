@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Usage: update s3_object [versionId]
+#
+# Downloads, installs and loads a config tarball object from the designated config S3 bucket.
+# Optionally takes a version ID for versioned objects, otherwise defaults to loading the latest version.
+
 set -eu
 
 cd /var/vcap/jobs/haproxy/
