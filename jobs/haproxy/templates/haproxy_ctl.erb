@@ -15,7 +15,6 @@ CONFIG_DIR="${JOB_DIR}/config/"
 
 # Environment variables that be referenced inside HAProxy configuration
 export HAPROXY_FILES_DIR="${CONFIG_DIR}"
-export HAPROXY_CERTS_DIR="${CONFIG_DIR}/certs"  # TODO: bad idea.  Get rid of this variable.
 
 <% p('env').each do |key, value| %>
 export <%= key %>='<%= value %>'

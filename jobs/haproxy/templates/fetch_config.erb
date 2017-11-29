@@ -29,13 +29,6 @@ BACKUP_DIR="${JOB_DIR}/config-backup-$(date -Iseconds)"
 mv "${JOB_DIR}/config" "${BACKUP_DIR}"
 mv config "${JOB_DIR}/config"
 
-# TODO: Remove this after the migration from acme-proxy-boshrelease
-if [[ ! -d "${JOB_DIR}/config/haproxy.d" ]];
-then
-   mv "${JOB_DIR}/config/configs" "${JOB_DIR}/config/haproxy.d"
-   cp "${JOB_DIR}/__fallback.cfg" "${JOB_DIR}/config/haproxy.d"
-fi
-
 if /var/vcap/jobs/haproxy/bin/haproxy_ctl test >> "${LOG_FILE}"
 then
 	rm -rf "${BACKUP_DIR}"
