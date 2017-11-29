@@ -10,6 +10,8 @@ This is a HAProxy BOSH release designed as a highly available reverse proxy for 
 * Designed with ACME-based automated HTTPS certificate management in mind
 * Designed for integration with testing pipelines
 
+[An example Concourse pipeline](https://github.com/govau/cga-frontend-config) that tests and deploys releases is also available.
+
 ### Overview
 
 The configuration is expected to be a tarball stored on a remote backend.  (Currently only AWS S3 supported.)  The tarball should unpack to a directory structure that's something like this:
@@ -67,11 +69,12 @@ instance_groups:
             mode http
             bind *:80
             acl acme_challenge path_beg -i /.well-known/acme-challenge/
-            http-request redirect location http://"${ACME_ADDRESS}"%[capture.req.uri] code 302 if acme_challenge
+            http-request redirect location http://"${FE_ACME_ADDRESS}"%[capture.req.uri] code 302 if acme_challenge
             http-request redirect scheme https code 301 unless acme_challenge
       # Optionally add some extra variables that can be used in the HAProxy configs
+      # It's recommended (but not required) to give them a common prefix for easy whitelisting in test environments
       env:
-        ACME_ADDRESS: acme.example.com
+        FE_ACME_ADDRESS: acme.example.com
     release: dta-frontend
   vm_extensions: [frontend]  # Should add iam_instance_profile that gives access to above config bucket
   networks:
