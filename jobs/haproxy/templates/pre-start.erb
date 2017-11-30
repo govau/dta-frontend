@@ -6,10 +6,6 @@ JOB_DIR=/var/vcap/jobs/haproxy/
 
 mkdir -p "${JOB_DIR}/chroot"
 
-# TODO: Remove this after the migration from acme-proxy-boshrelease
-cp "${JOB_DIR}/config/haproxy.d/__fallback.cfg" "${JOB_DIR}"
-
-# 
 sysctl --all >  "${JOB_DIR}/sysctl_defaults.conf"
 
 <% if_p('default_config_object') do |default_config_object| %>
