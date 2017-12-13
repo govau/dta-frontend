@@ -2,6 +2,7 @@ set -eux
 
 HAPROXY_VERSION=1.7.9
 PCRE_VERSION=8.41
+SOCAT_VERSION=1.7.3.2
 
 mkdir ${BOSH_INSTALL_TARGET}/bin
 
@@ -17,4 +18,12 @@ pushd haproxy-${HAPROXY_VERSION}
   make TARGET=linux2628 USE_OPENSSL=1 USE_STATIC_PCRE=1 USE_ZLIB=1
   cp haproxy ${BOSH_INSTALL_TARGET}/bin/
   chmod 755 ${BOSH_INSTALL_TARGET}/bin/haproxy
+popd
+
+tar xjf haproxy/socat-${SOCAT_VERSION}.tar.bz2
+pushd socat-${SOCAT_VERSION}
+  ./configure
+  make
+  cp socat ${BOSH_INSTALL_TARGET}/bin
+  chmod 755 ${BOSH_INSTALL_TARGET}/bin/socat
 popd
