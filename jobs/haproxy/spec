@@ -5,6 +5,7 @@ templates:
   pre-start.erb: bin/pre-start
   haproxy_ctl.erb: bin/haproxy_ctl
   fetch_config.erb: bin/fetch_config
+  install_config.erb: bin/install_config
   reload_config: bin/reload_config
   configure_system: bin/configure_system
   fallback_haproxy.cfg.erb: config/haproxy.d/__fallback.cfg

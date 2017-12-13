@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Usage:
+# install_config <tarball>
+#
+# Installs runtime config files from the given tarball
+
+set -eu
+
+JOB_DIR=/var/vcap/jobs/haproxy/
+LOG_FILE=/var/vcap/sys/log/haproxy/updates.txt
+FILE="$1"
+
+echo "$(date) Trying to install ${FILE}" >> "${LOG_FILE}"
+
+WORK_DIR="$(mktemp -d)"
+trap 'rm -rf "${WORK_DIR}"' EXIT
+cp "${FILE}" "${WORK_DIR}/config.tgz"
+cd "${WORK_DIR}"
+
+mkdir -p config
+tar xf config.tgz --directory=config
+
+BACKUP_DIR="${JOB_DIR}/config-backup-$(date -Iseconds)"
+mv "${JOB_DIR}/config" "${BACKUP_DIR}"
+mv config "${JOB_DIR}/config"
+
+if /var/vcap/jobs/haproxy/bin/haproxy_ctl test >> "${LOG_FILE}"
+then
+	rm -rf "${BACKUP_DIR}"
+	echo "$(date) Fetch completed successfully" >> "${LOG_FILE}"
+else
+	rm -rf "${JOB_DIR}/config"
+	mv "${BACKUP_DIR}" "${JOB_DIR}/config"
+	echo "$(date) Installation failed" >> "${LOG_FILE}"
+	exit 1
+fi
