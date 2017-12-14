@@ -1,0 +1,30 @@
+name: dta-frontend
+version: 0.3.0
+commit_hash: ff1f532
+uncommitted_changes: false
+jobs:
+- name: haproxy
+  version: bed57163d61d9b159ff094bbe8450b1ef07d82a1
+  fingerprint: bed57163d61d9b159ff094bbe8450b1ef07d82a1
+  sha1: c3c580eca699ae2c0cc7d3d3d183c19bbf7d0820
+packages:
+- name: awscli
+  version: 0c87af791ed236408852e32c9521c7deacc7647f
+  fingerprint: 0c87af791ed236408852e32c9521c7deacc7647f
+  sha1: 663ae7095669c8cce265fa4c41634ee245694d65
+  dependencies:
+  - python-2.7
+- name: haproxy
+  version: 7c1ff0e3e2bb8b4767bcaa8bf532c603a9a6fe1c
+  fingerprint: 7c1ff0e3e2bb8b4767bcaa8bf532c603a9a6fe1c
+  sha1: 6ba19d1e440a1b8b9f46e4a73d8c043c2c5ec99f
+  dependencies: []
+- name: python-2.7
+  version: 7063c9f4e43bf49374c2f6cc6c2f74a5467f2298
+  fingerprint: 7063c9f4e43bf49374c2f6cc6c2f74a5467f2298
+  sha1: bd130315766a7641dbd20aa328d16f084cc17965
+  dependencies: []
+license:
+  version: 10b395e52546d70e842f9f583bbcc626b8bf321c
+  fingerprint: 10b395e52546d70e842f9f583bbcc626b8bf321c
+  sha1: cd39ff815b1cb7e149616aa6ebe889fa80b9af97
