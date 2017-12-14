@@ -71,10 +71,18 @@ instance_groups:
             acl acme_challenge path_beg -i /.well-known/acme-challenge/
             http-request redirect location http://"${FE_ACME_ADDRESS}"%[capture.req.uri] code 302 if acme_challenge
             http-request redirect scheme https code 301 unless acme_challenge
+
+        listen healthcheck
+            mode http
+            bind *:9999
+            server localhost:8080
       # Optionally add some extra variables that can be used in the HAProxy configs
       # It's recommended (but not required) to give them a common prefix for easy whitelisting in test environments
       env:
         FE_ACME_ADDRESS: acme.example.com
+      # Example drain command for a load balancer that only does TCP health checking
+      drain_command: "disable frontend healthcheck"
+      drain_seconds: 120
     release: dta-frontend
   vm_extensions: [frontend]  # Should add iam_instance_profile that gives access to above config bucket
   networks:
