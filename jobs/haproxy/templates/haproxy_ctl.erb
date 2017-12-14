@@ -21,11 +21,11 @@ export <%= key %>='<%= value %>'
 <% end %>
 
 function wait_for_finish {
-  while read PID
+  for PID in "$@"
   do
     # Trick for waiting for an arbitrary process to finish
     tail -f --pid "${PID}" /dev/null
-  done < "${PID_FILE}"
+  done
 }
 
 case $1 in
@@ -40,20 +40,21 @@ case $1 in
     ;;
 
   stop)
-    xargs kill -SIGUSR1 < "${PID_FILE}"
-    wait_for_finish
-    rm -f "${PID_FILE}"
+    PIDS=$(<"${PID_FILE}")
+    kill -SIGUSR1 ${PIDS}
+    ( wait_for_finish ${PIDS}; rm -f "${PID_FILE}" ) &
+    disown
     ;;
 
   hard-stop)
     # Normally this will be run by monit after BOSH has run the drain script, so we can't assume haproxy is running.
     if [[ -f "${PID_FILE}" ]]
     then
+      PIDS=$(<"${PID_FILE}")
       # haproxy interprets SIGUSR1 as a "graceful stop" signal
-      xargs kill -SIGUSR1 < "${PID_FILE}"
-      sleep 3
-      xargs kill < "${PID_FILE}" || true
-      wait_for_finish
+      kill -SIGUSR1 ${PIDS}
+      ( sleep 20; kill ${PIDS} ) &
+      wait_for_finish ${PIDS}
       rm -f "${PID_FILE}"
     fi
     ;;
