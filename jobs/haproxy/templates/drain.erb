@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+CTL=/var/vcap/jobs/haproxy/bin/haproxy_ctl
+LOG_FILE=/var/vcap/sys/log/haproxy/updates.txt
+
+if $CTL is_running
+then
+    echo "$(date) Draining" >> "${LOG_FILE}"
+    <% if_p('drain_command') do |drain_command| %>
+    echo '<%= drain_command %>' | /var/vcap/packages/haproxy/bin/socat - /var/vcap/sys/run/haproxy/haproxy.sock >> "${LOG_FILE}"
+    sleep <%= p('drain_seconds') %>
+    <% end %>
+    $CTL stop
+    echo "$(date) Drain complete" >> "${LOG_FILE}"
+fi
+
+echo 0
+exit 0

@@ -11,7 +11,7 @@ templates:
   fallback_haproxy.cfg.erb: config/haproxy.d/__fallback.cfg
   global_haproxy.cfg: global_haproxy.cfg
   update: bin/update
-  drain: bin/drain
+  drain.erb: bin/drain
   merge_sysctl: bin/merge_sysctl
 
 packages:
@@ -30,3 +30,9 @@ properties:
   fallback_config:
     description: HAProxy config to be used if no runtime config can be loaded
     default: ""
+  drain_command:
+    description: Command to send to HAProxy stats port for draining
+    example: "disable frontend tcp_healthcheck; set foo/bar state drain"
+  drain_seconds:
+    description: Number of seconds to wait between drain command and shutting down HAProxy
+    default: 90
