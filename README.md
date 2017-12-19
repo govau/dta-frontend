@@ -1,6 +1,6 @@
 ## DTA Frontend BOSH Release
 
-This is a HAProxy 1.7.9 BOSH release designed as a highly available reverse proxy for a multi-tenant site hosted by the Australian Digital Transformation Agency.
+This is a [HAProxy](https://www.haproxy.org/) 1.7.9 BOSH release designed as a highly available reverse proxy for a multi-tenant site hosted by the [Australian Digital Transformation Agency (DTA)](https://www.dta.gov.au/).
 
 ### Features
 
@@ -11,6 +11,12 @@ This is a HAProxy 1.7.9 BOSH release designed as a highly available reverse prox
 * Designed for integration with testing pipelines
 
 [An example Concourse pipeline](https://github.com/govau/cga-frontend-config) that tests and deploys releases is also available.
+
+### Why HAProxy?
+
+[Nginx](https://nginx.org/en/) and [Lighttpd](https://www.lighttpd.net/) are both great web servers with good reverse proxying functionality, and are popular frontends to web applications.  However, HAProxy is more of a "do one thing and do it well" reverse proxy: it doesn't serve web pages, but has comprehensive support for HTTP/TCP proxying, request/response rewriting, access control, load balancing and backend management.  HAProxy is also better suited as a frontend to a multi-tenant server.  Nginx and Lighttpd are essentially configured site-by-site, which can lead to config boilerplate, or generate busy work as sites are added or removed.  HAProxy is configured as a collection of frontends, backends and proxying rules, so it's a more natural fit.
+
+Major cloud providers are now offering layer 7 load balancers that can often do the job, too.  HAProxy has a highly flexible rule language that can easily be checked as-is into source control.  Sites that don't need the extra flexibility can use still use [Terraform](https://www.terraform.io/) for an infrastructure-as-code approach to managing cloud assets.
 
 ### Overview
 
