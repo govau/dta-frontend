@@ -1,6 +1,6 @@
 ## DTA Frontend BOSH Release
 
-This is a HAProxy BOSH release designed as a highly available reverse proxy for a multi-tenant site hosted by the Australian Digital Transformation Agency.
+This is a HAProxy 1.7.9 BOSH release designed as a highly available reverse proxy for a multi-tenant site hosted by the Australian Digital Transformation Agency.
 
 ### Features
 
@@ -40,7 +40,7 @@ The configuration is expected to be a tarball stored on a remote backend.  (Curr
 
 All files/directories are optional, except for `./haproxy.d`, which should contain [HAProxy configuration files](https://www.haproxy.org/download/1.7/doc/configuration.txt).  `./iptables.conf` (`iptables` configuration in [`iptables-save`](http://www.faqs.org/docs/iptables/iptables-save.html) format) and `./sysctl.d` (same as [`/etc/sysctl.d/`](http://man7.org/linux/man-pages/man5/sysctl.d.5.html)) are paths recognised by the BOSH release, but all other files/directories are just suggestions and can be added as needed.  The HAProxy configs can use the `HAPROXY_FILES_DIR` environment variable to get the path to the directory that contains the configuration files.  Extra custom environment variables can be added through the `env` job property.
 
-A reload of configuration is triggered by running `/var/vcap/jobs/haproxy/bin/update` (see [the source](jobs/haproxy/templates/update) for usage details), which can be run using BOSH's SSH support.  (More sophisticated remote management functionality is expected to be added in future.)
+See the [Highly Available Updates section](#highly-available-updates) for information on updating configuration.
 
 ### Example Manifest
 
@@ -69,7 +69,7 @@ instance_groups:
             mode http
             bind *:80
             acl acme_challenge path_beg -i /.well-known/acme-challenge/
-            http-request redirect location http://"${FE_ACME_ADDRESS}"%[capture.req.uri] code 302 if acme_challenge
+            http-request redirect location http://"${FE_ACME_CLIENT_ADDRESS}"%[capture.req.uri] code 302 if acme_challenge
             http-request redirect scheme https code 301 unless acme_challenge
 
         listen healthcheck
@@ -79,7 +79,7 @@ instance_groups:
       # Optionally add some extra variables that can be used in the HAProxy configs
       # It's recommended (but not required) to give them a common prefix for easy whitelisting in test environments
       env:
-        FE_ACME_ADDRESS: acme.example.com
+        FE_ACME_CLIENT_ADDRESS: acme.prod.example.com
       # Example drain command for a load balancer that only does TCP health checking
       drain_command: "disable frontend healthcheck"
       drain_seconds: 120
@@ -101,3 +101,11 @@ update:
   max_in_flight: 1
   update_watch_time: 10000
 ```
+
+### Highly Available Updates
+
+The configuration files for HAProxy and other things can be reloaded without doing a BOSH redeployment, which would trigger a full drain of each backend instance.  This is done by updating files in the config bucket and running `sudo /var/vcap/jobs/haproxy/bin/update` (see [the source](jobs/haproxy/templates/update) for usage details).  This can be done remotely by using BOSH's SSH support.  (More sophisticated remote management functionality is expected to be added in future.)  See [the example Concourse pipeline](https://github.com/govau/cga-frontend-config).
+
+Other updates (such as updating stemcells, BOSH releases, or BOSH manifest properties) require a BOSH redeployment.  This BOSH release contains drain scripts to gracefully shut down each HAProxy instance as BOSH does its usual rolling restart.  You'll most likely need to configure the `drain_command` and `drain_seconds` properties to signal a drain to frontend load balancers.  The `drain_seconds` value should take into account the LB balancer health checking interval and the time-to-live (TTL) on any DNS records.  The `drain_command` is run immediately after BOSH starts a shutdown, then after `drain_seconds` HAProxy is signalled to do a soft shutdown.
+
+Don't forget to also configure draining for backends.  For example, if using Cloud Foundry, you may need to change its [own drain wait time](https://github.com/cloudfoundry-incubator/routing-release/blob/develop/jobs/gorouter/spec#L62).
