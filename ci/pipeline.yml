@@ -10,7 +10,7 @@ resources:
 - name: git
   type: git
   source:
-    uri: git@github.com:govau/dta-frontend-boshrelease.git
+    uri: git@github.com:govau/frontend-boshrelease.git
     private_key: {{git_private_key}}
     branch: master
     ignore_paths:
@@ -18,14 +18,14 @@ resources:
 - name: git-push
   type: git
   source:
-    uri: git@github.com:govau/dta-frontend-boshrelease.git
+    uri: git@github.com:govau/frontend-boshrelease.git
     private_key: {{git_private_key}}
     branch: master
 - name: github-release
   type: github-release
   source:
     owner: govau
-    repository: dta-frontend
+    repository: frontend-boshrelease
     access_token: {{git_personal_access_token}}
 - name: version
   type: semver
@@ -33,7 +33,7 @@ resources:
     driver: git
     uri: git@github.com:govau/boshreleases.git
     branch: master
-    file: dta-frontend.version
+    file: frontend.version
     initial_version: 0.1.0
     private_key: {{git_boshreleases_private_key}}
 
@@ -50,7 +50,7 @@ jobs:
   - task: create-bosh-release
     file: git/ci/create-bosh-release.yml
     params:
-      bosh_release_name: dta-frontend
+      bosh_release_name: frontend
       access_key_id: {{boshrelease_s3_bucket_access_key_id}}
       secret_access_key: {{boshrelease_s3_bucket_secret_access_key}}
 
