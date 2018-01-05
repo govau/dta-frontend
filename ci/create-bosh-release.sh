@@ -50,7 +50,7 @@ releases:
 - name: $RELEASE_NAME
   version: $VERSION
   sha1: $RELEASE_SHA1
-  url: https://github.com/govau/${RELEASE_NAME}/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
+  url: https://github.com/govau/${RELEASE_NAME}-boshrelease/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
 \`\`\`
 
 EOF
