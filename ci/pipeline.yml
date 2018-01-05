@@ -34,7 +34,7 @@ resources:
     uri: git@github.com:govau/boshreleases.git
     branch: master
     file: dta-frontend.version
-    initial_version: 0.3.0
+    initial_version: 0.1.0
     private_key: {{git_boshreleases_private_key}}
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
   - aggregate:
     - get: version
       params:
-        bump: patch
+        bump: minor
     - get: git
       trigger: true
 
@@ -71,4 +71,4 @@ jobs:
       tag: github-release-info/tag
       body: github-release-info/body
       globs:
-      - github-release-info/*-release-*.tgz
+      - github-release-info/*-*.*.*.tgz

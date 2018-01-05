@@ -25,7 +25,7 @@ EOF
   # into release dir, which is invalid cross-device link
   export HOME=$PWD
   bosh sync-blobs
-  bosh -n create-release --final --force --tarball=${RELEASE_ROOT}/${RELEASE_NAME}-release-$VERSION.tgz --name $RELEASE_NAME --version $VERSION
+  bosh -n create-release --final --force --tarball=${RELEASE_ROOT}/${RELEASE_NAME}-$VERSION.tgz --name $RELEASE_NAME --version $VERSION
 
   # GIT!
   if [[ -z $(git config --global user.email) ]]; then
@@ -38,7 +38,7 @@ EOF
   git add releases .final_builds
   git commit -m"New release of $RELEASE_NAME"
 
-  RELEASE_SHA1=$(sha1sum ${RELEASE_ROOT}/${RELEASE_NAME}-release-$VERSION.tgz |awk '{print $1}')
+  RELEASE_SHA1=$(sha1sum ${RELEASE_ROOT}/${RELEASE_NAME}-$VERSION.tgz |awk '{print $1}')
 
   # prep details for github release
   echo "v${VERSION}"                 > ${RELEASE_ROOT}/tag
@@ -50,7 +50,7 @@ releases:
 - name: $RELEASE_NAME
   version: $VERSION
   sha1: $RELEASE_SHA1
-  url: https://github.com/govau/${RELEASE_NAME}/releases/download/v${VERSION}/${RELEASE_NAME}-release-${VERSION}.tgz
+  url: https://github.com/govau/${RELEASE_NAME}/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
 \`\`\`
 
 EOF
