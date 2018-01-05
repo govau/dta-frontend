@@ -10,7 +10,7 @@ resources:
 - name: git
   type: git
   source:
-    uri: git@github.com:govau/dta-frontend.git
+    uri: git@github.com:govau/dta-frontend-boshrelease.git
     private_key: {{git_private_key}}
     branch: master
     ignore_paths:
@@ -18,7 +18,7 @@ resources:
 - name: git-push
   type: git
   source:
-    uri: git@github.com:govau/dta-frontend.git
+    uri: git@github.com:govau/dta-frontend-boshrelease.git
     private_key: {{git_private_key}}
     branch: master
 - name: github-release
