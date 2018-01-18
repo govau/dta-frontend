@@ -9,7 +9,7 @@ templates:
   reload_config: bin/reload_config
   configure_system: bin/configure_system
   fallback_haproxy.cfg.erb: config/haproxy.d/__fallback.cfg
-  global_haproxy.cfg: global_haproxy.cfg
+  global_haproxy.cfg.erb: global_haproxy.cfg
   update: bin/update
   drain.erb: bin/drain
   merge_sysctl: bin/merge_sysctl
