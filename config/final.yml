@@ -1,5 +1,5 @@
 ---
-name: dta-frontend
+name: frontend
 blobstore:
   provider: s3
   options:

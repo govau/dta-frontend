@@ -9,7 +9,7 @@ templates:
   reload_config: bin/reload_config
   configure_system: bin/configure_system
   fallback_haproxy.cfg.erb: config/haproxy.d/__fallback.cfg
-  global_haproxy.cfg: global_haproxy.cfg
+  global_haproxy.cfg.erb: global_haproxy.cfg
   update: bin/update
   drain.erb: bin/drain
   merge_sysctl: bin/merge_sysctl
@@ -36,3 +36,11 @@ properties:
   drain_seconds:
     description: Number of seconds to wait between drain command and shutting down HAProxy
     default: 90
+  syslog_address:
+    description: |
+      The syslog server address for proxy logging. Can be an IPv4/IPv6 address optionally followed
+      by a colon and a UDP port, or a filesystem path to a UNIX domain socket.
+    default: "/dev/log"
+    example: 127.0.0.1:1543
+  syslog_format:
+    description: Log format used when generating syslog messages. Either rfc3164 (default) or rfc5424.

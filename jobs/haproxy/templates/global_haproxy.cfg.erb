@@ -3,7 +3,7 @@
 global
 	user vcap
 	group vcap
-	log /dev/log local0
+	log <%= p("syslog_address") %><% if_p("syslog_format") do |format| %> format <%= format %><% end %> local0
 	chroot /var/vcap/jobs/haproxy/chroot
 	stats socket /var/vcap/sys/run/haproxy/haproxy.sock mode 600 level admin
 	stats timeout 5m
