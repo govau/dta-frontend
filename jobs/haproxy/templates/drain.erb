@@ -1,6 +1,26 @@
 #!/bin/sh
 
+source /var/vcap/packages/awscli/bosh/runtime.env
+
 set -e
+
+# First, deregister ourselves from the load balancer target groups
+OUR_INSTANCE_ID="$(ec2metadata --instance-id)"
+REGION="ap-southeast-2"
+HTTP_TARGET_GROUP="<%= p('http_target_group') %>"
+HTTPS_TARGET_GROUP="<%= p('https_target_group') %>"
+
+# These should always return 0 exit code, regardless of whether we are already deregistered
+for TARGET in ${HTTP_TARGET_GROUP} ${HTTPS_TARGET_GROUP} ; do
+    aws elbv2 deregister-targets --target-group-arn "${TARGET}" --targets "Id=${OUR_INSTANCE_ID}" --region "${REGION}" > /dev/null
+done
+
+# So then wait until we can confirm that we are not registered
+for TARGET in ${HTTP_TARGET_GROUP} ${HTTPS_TARGET_GROUP} ; do
+    while ! aws elbv2 describe-target-health --target-group-arn "${TARGET}" --targets "Id=${OUR_INSTANCE_ID}" --region "${REGION}" | grep '"Target.NotRegistered"' > /dev/null ; do
+        sleep 10
+    done
+done
 
 CTL=/var/vcap/jobs/haproxy/bin/haproxy_ctl
 LOG_FILE=/var/vcap/sys/log/haproxy/updates.txt
@@ -10,7 +30,8 @@ then
     echo "$(date) Draining" >> "${LOG_FILE}"
     <% if_p('drain_command') do |drain_command| %>
     echo '<%= drain_command %>' | /var/vcap/packages/haproxy/bin/socat - /var/vcap/sys/run/haproxy/haproxy.sock >> "${LOG_FILE}"
-    sleep <%= p('drain_seconds') %>
+    # Since the listener already has a target deregistration delay of 5 minutes, we don't bother sleeping any longer
+    # sleep <%= p('drain_seconds') %>
     <% end %>
     $CTL stop
     echo "$(date) Drain complete" >> "${LOG_FILE}"
