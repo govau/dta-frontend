@@ -1,0 +1,25 @@
+#!/bin/sh
+
+source /var/vcap/packages/awscli/bosh/runtime.env
+
+set -e
+
+# Register ourselves with the load balancer target groups
+OUR_INSTANCE_ID="$(ec2metadata --instance-id)"
+REGION="ap-southeast-2"
+HTTP_TARGET_GROUP="<%= p('http_target_group') %>"
+HTTPS_TARGET_GROUP="<%= p('https_target_group') %>"
+
+# These should always return 0 exit code, regardless of whether we are already registered
+for TARGET in ${HTTP_TARGET_GROUP} ${HTTPS_TARGET_GROUP} ; do
+    aws elbv2 register-targets --target-group-arn "${TARGET}" --targets "Id=${OUR_INSTANCE_ID}" --region "${REGION}" > /dev/null
+done
+
+# So then wait until we can confirm that we are healthy
+for TARGET in ${HTTP_TARGET_GROUP} ${HTTPS_TARGET_GROUP} ; do
+    while ! aws elbv2 describe-target-health --target-group-arn "${TARGET}" --targets "Id=${OUR_INSTANCE_ID}" --region "${REGION}" | grep '"healthy"' > /dev/null ; do
+        sleep 10
+    done
+done
+
+exit 0

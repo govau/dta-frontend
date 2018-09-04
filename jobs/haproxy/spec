@@ -3,6 +3,7 @@ name: haproxy
 
 templates:
   pre-start.erb: bin/pre-start
+  post-start.erb: bin/post-start
   haproxy_ctl.erb: bin/haproxy_ctl
   fetch_config.erb: bin/fetch_config
   install_config.erb: bin/install_config
@@ -22,6 +23,10 @@ packages:
 properties:
   config_bucket:
     description: Name of S3 bucket that contains proxy configuration
+  http_target_group:
+    description: ARN for the NLB HTTP target group
+  https_target_group:
+    description: ARN for the NLB HTTPS target group
   default_config_object:
     description: Key of object to load by default for configuration at startup
   env:
