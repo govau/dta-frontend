@@ -16,8 +16,11 @@ for TARGET in ${HTTP_TARGET_GROUP} ${HTTPS_TARGET_GROUP} ; do
 done
 
 # So then wait until we can confirm that we are not registered
+START="$(date +%s)"
 for TARGET in ${HTTP_TARGET_GROUP} ${HTTPS_TARGET_GROUP} ; do
     while ! aws elbv2 describe-target-health --target-group-arn "${TARGET}" --targets "Id=${OUR_INSTANCE_ID}" --region "${REGION}" | grep '"Target.NotRegistered"' > /dev/null ; do
+        # timeout if we've been doing this longer than 10 minutes
+        expr \( $(date +%s) - $START \) \< 600 > /dev/null || exit 1
         sleep 10
     done
 done
