@@ -10,6 +10,10 @@ haproxy/haproxy-1.8.8.tar.gz:
   size: 2054534
   object_id: e6f13b33-43d7-4902-63d4-f11cf64dc6df
   sha: 4686e5ea55524413d4d929323f1b317fe9eade90
+haproxy/haproxy-1.8.13.tar.gz:
+  size: 2063046
+  object_id: b8f30d67-1f40-4a4b-408b-8e93a26c5371
+  sha: 1c8588d63c7592404d0a3ea59aa41c2dccaaa909
 haproxy/pcre-8.41.tar.gz:
   size: 2068775
   object_id: 0f0f8bdc-8b91-4f2c-4e72-2ae00ba51fa8
