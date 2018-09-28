@@ -13,4 +13,5 @@ else
   iptables --flush
 fi
 
+source /var/vcap/packages/python-2.7/bosh/runtime.env
 ./bin/merge_sysctl sysctl_defaults.conf ./config/sysctl.d/*.conf | sysctl --load - &> /dev/null
