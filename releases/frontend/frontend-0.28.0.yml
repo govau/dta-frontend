@@ -1,0 +1,30 @@
+name: frontend
+version: 0.28.0
+commit_hash: e162ca7
+uncommitted_changes: false
+jobs:
+- name: haproxy
+  version: 672a487c41ff5fcb3e3e46ed7de282e6aa8c4224
+  fingerprint: 672a487c41ff5fcb3e3e46ed7de282e6aa8c4224
+  sha1: ee9b2af8b72083dfede5eab6906d9759e182c5c2
+packages:
+- name: awscli
+  version: 0c87af791ed236408852e32c9521c7deacc7647f
+  fingerprint: 0c87af791ed236408852e32c9521c7deacc7647f
+  sha1: 663ae7095669c8cce265fa4c41634ee245694d65
+  dependencies:
+  - python-2.7
+- name: haproxy
+  version: 7b83f179c4607a3589736f5e4c6f5baeead95d04
+  fingerprint: 7b83f179c4607a3589736f5e4c6f5baeead95d04
+  sha1: f3af00f22548619712402419698383af475f1afc
+  dependencies: []
+- name: python-2.7
+  version: 7063c9f4e43bf49374c2f6cc6c2f74a5467f2298
+  fingerprint: 7063c9f4e43bf49374c2f6cc6c2f74a5467f2298
+  sha1: bd130315766a7641dbd20aa328d16f084cc17965
+  dependencies: []
+license:
+  version: 10b395e52546d70e842f9f583bbcc626b8bf321c
+  fingerprint: 10b395e52546d70e842f9f583bbcc626b8bf321c
+  sha1: cd39ff815b1cb7e149616aa6ebe889fa80b9af97
