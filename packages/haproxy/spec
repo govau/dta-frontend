@@ -2,6 +2,6 @@
 name: haproxy
 
 files:
-  - haproxy/haproxy-1.8.13.tar.gz  # https://www.haproxy.org/download/1.8/src/haproxy-1.8.13.tar.gz
-  - haproxy/pcre-8.42.tar.gz  # https://ftp.pcre.org/pub/pcre/pcre-8.42.tar.gz
-  - haproxy/socat-1.7.3.2.tar.bz2  # http://www.dest-unreach.org/socat/download/socat-1.7.3.2.tar.bz2
+  - haproxy/haproxy-1.8.19.tar.gz  # https://www.haproxy.org/download/1.8/src/haproxy-1.8.19.tar.gz
+  - haproxy/pcre-8.43.tar.gz  # https://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz
+  - haproxy/socat-1.7.3.3.tar.bz2  # http://www.dest-unreach.org/socat/download/socat-1.7.3.3.tar.bz2

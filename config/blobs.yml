@@ -14,6 +14,10 @@ haproxy/haproxy-1.8.13.tar.gz:
   size: 2063046
   object_id: b8f30d67-1f40-4a4b-408b-8e93a26c5371
   sha: 1c8588d63c7592404d0a3ea59aa41c2dccaaa909
+haproxy/haproxy-1.8.19.tar.gz:
+  size: 2080757
+  object_id: 78b4158d-4483-4d32-7b2c-d0be2eba1848
+  sha: 0731f1274a4028019c1c2753fff3cd69a6c1628f
 haproxy/pcre-8.41.tar.gz:
   size: 2068775
   object_id: 0f0f8bdc-8b91-4f2c-4e72-2ae00ba51fa8
@@ -22,7 +26,15 @@ haproxy/pcre-8.42.tar.gz:
   size: 2081413
   object_id: 4e6aa018-b4e3-4bca-6abb-ecc73be116e3
   sha: ee505270446f4c4bf52ac1a371335fdbb14465cb
+haproxy/pcre-8.43.tar.gz:
+  size: 2085854
+  object_id: 40095e2c-279d-45f9-4b55-e3916f37ca9d
+  sha: 8f36ed69d3e938972fc511c19bfaa0ff27ff1d71
 haproxy/socat-1.7.3.2.tar.bz2:
   size: 493324
   object_id: 48e50eee-09aa-40e8-6eac-5d95cb3ee9cb
   sha: 94e0003607fc1bf3af534f70831cf70bb944ab5d
+haproxy/socat-1.7.3.3.tar.bz2:
+  size: 489901
+  object_id: ab44b8bb-263f-47ff-5b80-0d8ec589f3b9
+  sha: 504afb0f2ae5d3582448cfc6e2b676370b0b9f81
